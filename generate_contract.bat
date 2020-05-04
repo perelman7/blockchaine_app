@@ -1,0 +1,1 @@
+web3j solidity generate -b .\src\main\resources\out\Test_sol_Test.bin -a .\src\main\resources\out\Test_sol_Test.abi -o .\src\main\java -p com.ether.web3test
