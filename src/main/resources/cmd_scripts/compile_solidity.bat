@@ -1,0 +1,1 @@
+solc Test.sol --bin --abi --optimize -o ./out
