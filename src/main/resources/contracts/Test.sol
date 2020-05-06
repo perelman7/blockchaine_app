@@ -5,6 +5,11 @@ contract Test {
     string name;
     uint age;
 
+    constructor(string memory _name, uint _age) public{
+        name = _name;
+        age = _age;
+    }
+
     function setName(string memory newName) public {
         name = newName;
     }

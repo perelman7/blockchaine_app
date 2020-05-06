@@ -17,7 +17,7 @@ import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 
 @Component
 @Slf4j
-public class Web3jProvider {
+public class Web3jMetadataProvider {
 
     @Value("${web3j.connection.url}")
     private String CONNECTION_URL;
@@ -55,13 +55,13 @@ public class Web3jProvider {
 
             if (this.gasLimit == null) {
                 //Getting block info
-                EthBlock send3 = web3j.ethGetBlockByNumber(LATEST, true).send();
-                this.gasLimit = send3.getResult().getGasLimit();
+                EthBlock ethBlock = web3j.ethGetBlockByNumber(LATEST, true).send();
+                this.gasLimit = ethBlock.getResult().getGasLimit();
             }
             if (this.gasPrice == null){
                 //getting gas prise for transaction
-                EthGasPrice send4 = web3j.ethGasPrice().send();
-                this.gasPrice = send4.getGasPrice();
+                EthGasPrice ethGasPrice = web3j.ethGasPrice().send();
+                this.gasPrice = ethGasPrice.getGasPrice();
             }
 
             result = GasInfo.builder()

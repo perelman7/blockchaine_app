@@ -1,1 +1,1 @@
-solc Test.sol --bin --abi --optimize -o ./out
+solc ../contracts/FileStorageContract.sol --bin --abi --optimize -o ../out

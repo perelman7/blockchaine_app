@@ -14,7 +14,7 @@ import java.math.BigInteger;
 
 @RestController
 @RequestMapping("/web3/wallet")
-public class CreateWalletController {
+public class WalletController {
 
     @Autowired
     private Web3jWalletService web3JWalletService;

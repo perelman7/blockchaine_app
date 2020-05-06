@@ -1,7 +1,7 @@
 package com.ether.web3test.service.transaction;
 
 import com.ether.web3test.model.transaction.GasInfo;
-import com.ether.web3test.service.util.Web3jProvider;
+import com.ether.web3test.service.util.Web3jMetadataProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,6 @@ import org.web3j.crypto.Credentials;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
@@ -26,14 +25,14 @@ import java.util.Optional;
 public class Web3jTransactionServiceImpl implements Web3jTransactionService {
 
     @Autowired
-    private Web3jProvider web3jProvider;
+    private Web3jMetadataProvider web3jMetadataProvider;
 
     public void sendTrx(String pk, String recipientAddress, BigDecimal amount) {
-        Web3j web3 = web3jProvider.getWeb3j();
+        Web3j web3 = web3jMetadataProvider.getWeb3j();
 
         try {
             Credentials credentials = Credentials.create(pk);
-            GasInfo gasInfo = web3jProvider.getGasInfo(credentials.getAddress());
+            GasInfo gasInfo = web3jMetadataProvider.getGasInfo(credentials.getAddress());
             BigInteger value = Convert.toWei(amount, Convert.Unit.ETHER).toBigInteger();
             RawTransaction rawTransaction = RawTransaction.createEtherTransaction(
                     gasInfo.getNonce(),
@@ -44,10 +43,6 @@ public class Web3jTransactionServiceImpl implements Web3jTransactionService {
 
             byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
             String hexValue = Numeric.toHexString(signedMessage);
-
-
-            log.info("BEFORE Balance: " + Convert.fromWei(web3.ethGetBalance(credentials.getAddress(),
-                    DefaultBlockParameterName.LATEST).send().getBalance().toString(), Convert.Unit.ETHER));
 
             EthSendTransaction ethSendTransaction = web3.ethSendRawTransaction(hexValue).send();
             String transactionHash = ethSendTransaction.getTransactionHash();
@@ -62,9 +57,6 @@ public class Web3jTransactionServiceImpl implements Web3jTransactionService {
             } while (!transactionReceipt.isPresent());
 
             log.info("Transaction " + transactionHash + " was mined in block # " + transactionReceipt.get().getBlockNumber());
-            log.info("AFTER Balance: " + Convert.fromWei(web3.ethGetBalance(credentials.getAddress(),
-                    DefaultBlockParameterName.LATEST).send().getBalance().toString(), Convert.Unit.ETHER));
-
 
         } catch (IOException | InterruptedException ex) {
             log.error("Send transaction error, message: {}", ex.getMessage());

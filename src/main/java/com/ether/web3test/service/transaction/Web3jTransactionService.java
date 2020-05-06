@@ -4,5 +4,5 @@ import java.math.BigDecimal;
 
 public interface Web3jTransactionService {
 
-    void sendTrx(String pk, String recipientAddress, BigDecimal amount);
+    void sendTrx(String privateKeySender, String recipientAddress, BigDecimal amount);
 }

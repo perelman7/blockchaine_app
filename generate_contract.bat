@@ -1,1 +1,1 @@
-web3j solidity generate -b .\src\main\resources\out\Test_sol_Test.bin -a .\src\main\resources\out\Test_sol_Test.abi -o .\src\main\java -p com.ether.web3test
+web3j solidity generate -b .\src\main\resources\out\FileStorageContract.bin -a .\src\main\resources\out\FileStorageContract.abi -o .\src\main\java -p com.ether.web3test.model.contracts

@@ -1,7 +1,7 @@
 package com.ether.web3test.service.wallet;
 
 import com.ether.web3test.model.wallet.CredentialsWallet;
-import com.ether.web3test.service.util.Web3jProvider;
+import com.ether.web3test.service.util.Web3jMetadataProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +29,7 @@ public class Web3JWalletServiceImpl implements Web3jWalletService {
     private String keyStorage;
 
     @Autowired
-    private Web3jProvider web3jProvider;
+    private Web3jMetadataProvider web3jMetadataProvider;
 
     @PostConstruct
     private void unlockAccounts() {
@@ -108,7 +108,7 @@ public class Web3JWalletServiceImpl implements Web3jWalletService {
     public BigInteger getBalanceByAccountNumber(String accountNumber) {
         BigInteger result = null;
         try {
-            Web3j web3j = web3jProvider.getWeb3j();
+            Web3j web3j = web3jMetadataProvider.getWeb3j();
             EthGetBalance ethGetBalance = web3j
                     .ethGetBalance(accountNumber, DefaultBlockParameterName.LATEST)
                     .sendAsync()

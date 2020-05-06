@@ -19,8 +19,8 @@ public class TransactionController {
 
     @PostMapping("/send")
     public ResponseEntity sendRowTransaction(String privateKeySender,
-                                          String accountRecipient,
-                                          BigDecimal amount){
+                                             String accountRecipient,
+                                             BigDecimal amount) {
         web3jTransactionService.sendTrx(privateKeySender, accountRecipient, amount);
         return new ResponseEntity(HttpStatus.OK);
     }
