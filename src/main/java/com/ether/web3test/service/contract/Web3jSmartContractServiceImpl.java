@@ -1,20 +1,16 @@
 package com.ether.web3test.service.contract;
 
 import com.ether.web3test.model.contracts.FileStorageContract;
+import com.ether.web3test.model.contracts.request.DeploySmartContractRequest;
 import com.ether.web3test.model.transaction.GasInfo;
 import com.ether.web3test.service.util.Web3jMetadataProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.RemoteCall;
 import org.web3j.tx.RawTransactionManager;
-import org.web3j.tx.TransactionManager;
-import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.tx.gas.DefaultGasProvider;
-import org.web3j.tx.gas.StaticGasProvider;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -29,33 +25,22 @@ public class Web3jSmartContractServiceImpl implements Web3jSmartContractService 
     /**
      * Deploy smart contract by private key and return hash address of contract
      *
-     * @param privateKey wallet`s private key
+     * @param request detailed info of smart contract
      * @return hash address of contract
      */
-    public String deploySC(String privateKey, MultipartFile file, String description, String recipientAddress) {
+    public String deploySC(DeploySmartContractRequest request) {
         String result = null;
         try {
             Web3j web3j = web3jMetadataProvider.getWeb3j();
-            GasInfo gasInfo = web3jMetadataProvider.getGasInfo(null);
-            Credentials credentials = Credentials.create(privateKey);
-            log.info("Gas info: {}", gasInfo);
-
-            byte[] content = file.getBytes();
-            String filename = file.getOriginalFilename();
-            String extension = filename.substring(filename.indexOf(".") + 1);
-
-            RawTransactionManager transactionManager = new RawTransactionManager(web3j, credentials);
+            Credentials credentials = Credentials.create(request.getPrivateKey());
             DefaultGasProvider defaultGasProvider = new DefaultGasProvider();
+            log.info("Gas info: limit({}) and price({})", defaultGasProvider.getGasLimit(), defaultGasProvider.getGasPrice());
 
-            StaticGasProvider staticGasProvider = new StaticGasProvider(defaultGasProvider.getGasPrice().multiply(BigInteger.valueOf(2L)), defaultGasProvider.getGasPrice().multiply(BigInteger.valueOf(2L)));
-            System.out.println(staticGasProvider.getGasPrice() + " " + staticGasProvider.getGasPrice());
-            FileStorageContract contract = FileStorageContract.deploy(web3j, transactionManager, staticGasProvider,
-                    filename, content, extension, description, recipientAddress, BigInteger.valueOf(new Date().getTime()))
+            FileStorageContract contract = FileStorageContract.deploy(web3j, new RawTransactionManager(web3j, credentials), defaultGasProvider,
+                    request.getFileInfo().getName(), request.getFileInfo().getPath(), request.getFileInfo().getExtension(),
+                    request.getDescription(), request.getRecipient(), BigInteger.valueOf(new Date().getTime()))
                     .send();
-//            FileStorageContract contract = FileStorageContract.deploy(web3j, credentials,
-//                    gasInfo.getGasPrice(), gasInfo.getGasPrice(),
-//                    filename, content, extension, description, recipientAddress, BigInteger.valueOf(new Date().getTime())
-//            ).send();
+
             result = contract.getContractAddress();
         } catch (Exception e) {
             log.error("Deploy smart contract error, message: {}", e.getMessage());

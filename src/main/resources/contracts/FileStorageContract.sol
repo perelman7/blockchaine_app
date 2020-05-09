@@ -3,16 +3,16 @@ pragma solidity >= 0.4.0 < 0.7.0;
 contract FileStorageContract {
 
     string filename;
-    bytes content;
+    string filepath;
     string extension;
     string description;
     address sender;
     string recipient;
     int64 date;
 
-    constructor(string memory _filename, bytes memory _content, string memory _extension, string memory _description, string memory _recipient, int64 _date) public{
+    constructor(string memory _filename, string memory _filepath, string memory _extension, string memory _description, string memory _recipient, int64 _date) public{
         filename = _filename;
-        content = _content;
+        filepath = _filepath;
         extension = _extension;
         description = _description;
         sender = msg.sender;
@@ -24,8 +24,8 @@ contract FileStorageContract {
         return filename;
     }
 
-    function getContent() public view returns (bytes memory){
-        return content;
+    function getFilepath() public view returns (string memory){
+        return filepath;
     }
 
     function getExtension() public view returns (string memory){
@@ -47,5 +47,4 @@ contract FileStorageContract {
     function getDate() public view returns (int64){
         return date;
     }
-    
 }

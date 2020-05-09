@@ -13,7 +13,6 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -30,21 +29,6 @@ public class Web3JWalletServiceImpl implements Web3jWalletService {
 
     @Autowired
     private Web3jMetadataProvider web3jMetadataProvider;
-
-    @PostConstruct
-    private void unlockAccounts() {
-//        try {
-//            Web3j web3j = this.getWeb3j();
-//            Admin admin = this.getAdmin();
-//
-//            EthAccounts send1 = web3j.ethAccounts().send();
-//            for(String currentAccount : send1.getAccounts()){
-//                PersonalUnlockAccount acc1 = admin.personalUnlockAccount(currentAccount, "acc1").send();
-//            }
-//        }catch (Exception e){
-//            log.error("Unlock ERROR, message: {}", e.getMessage());
-//        }
-    }
 
     /**
      * Method generates new wallet and return private key
@@ -116,16 +100,7 @@ public class Web3JWalletServiceImpl implements Web3jWalletService {
             //in wei
             result = ethGetBalance.getBalance();
         } catch (Exception e) {
-
-        }
-        return result;
-    }
-
-    public BigInteger getBalanceByPrivateKey(String privateKey) {
-        BigInteger result = null;
-        Credentials credentials = this.getCredentialByPrivateKey(privateKey);
-        if (credentials != null) {
-            result = this.getBalanceByAccountNumber(credentials.getAddress());
+            log.error("Getting balance error, message: {}", e.getMessage());
         }
         return result;
     }

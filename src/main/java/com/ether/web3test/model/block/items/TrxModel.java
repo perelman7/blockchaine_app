@@ -17,7 +17,7 @@ public class TrxModel implements Serializable {
     private String sender;
     private String recipient;
     private BigInteger amount;
-    private String date;
+    private String blockNumber;
     private String trxHash;
 }
 

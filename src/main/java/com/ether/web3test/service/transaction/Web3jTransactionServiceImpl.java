@@ -37,7 +37,7 @@ public class Web3jTransactionServiceImpl implements Web3jTransactionService {
             RawTransaction rawTransaction = RawTransaction.createEtherTransaction(
                     gasInfo.getNonce(),
                     gasInfo.getGasPrice(),
-                    gasInfo.getGasLimit(),
+                    BigInteger.valueOf(3_000_000L),
                     recipientAddress,
                     value);
 
@@ -48,6 +48,9 @@ public class Web3jTransactionServiceImpl implements Web3jTransactionService {
             String transactionHash = ethSendTransaction.getTransactionHash();
             log.info("transactionHash: " + transactionHash);
 
+            if(transactionHash == null){
+                throw new IOException("Transaction hash is null");
+            }
             Optional<TransactionReceipt> transactionReceipt = null;
             do {
                 System.out.println("checking if transaction " + transactionHash + " is mined....");

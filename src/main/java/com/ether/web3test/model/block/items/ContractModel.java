@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 
 @Data
 @AllArgsConstructor
@@ -14,11 +15,11 @@ import java.io.Serializable;
 public class ContractModel implements Serializable {
 
     private String filename;
-    private byte[] content;
+    private String filepath;
     private String extension;
     private String description;
     private String recipient;
     private String sender;
-    private Long data;
+    private BigInteger data;
 
 }
