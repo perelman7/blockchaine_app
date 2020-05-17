@@ -25,7 +25,7 @@ import java.security.NoSuchProviderException;
 public class Web3JWalletServiceImpl implements Web3jWalletService {
 
     @Value("${key.storage.url}")
-    private String keyStorage;
+    private String KEYSTORE;
 
     @Autowired
     private Web3jMetadataProvider web3jMetadataProvider;
@@ -40,8 +40,8 @@ public class Web3JWalletServiceImpl implements Web3jWalletService {
     public CredentialsWallet createWallet(String password) {
         CredentialsWallet result = null;
         try {
-            String newWallet = WalletUtils.generateFullNewWalletFile(password, new File(keyStorage));
-            Credentials credentials = WalletUtils.loadCredentials(password, keyStorage + File.separator + newWallet);
+            String newWallet = WalletUtils.generateFullNewWalletFile(password, new File(KEYSTORE));
+            Credentials credentials = WalletUtils.loadCredentials(password, KEYSTORE + File.separator + newWallet);
             String publicKey = credentials.getEcKeyPair().getPublicKey().toString();
             String privateKey = credentials.getEcKeyPair().getPrivateKey().toString(16);
 
@@ -59,7 +59,7 @@ public class Web3JWalletServiceImpl implements Web3jWalletService {
     public CredentialsWallet getCredentialsWallet(String filename, String pwd) {
         CredentialsWallet credentialsWallet = null;
         try {
-            Credentials credentials = WalletUtils.loadCredentials(pwd, keyStorage + File.separator + filename);
+            Credentials credentials = WalletUtils.loadCredentials(pwd, KEYSTORE + File.separator + filename);
             String publicKey = credentials.getEcKeyPair().getPublicKey().toString();
             String privateKey = credentials.getEcKeyPair().getPrivateKey().toString(16);
             credentialsWallet = CredentialsWallet.builder()
@@ -103,5 +103,47 @@ public class Web3JWalletServiceImpl implements Web3jWalletService {
             log.error("Getting balance error, message: {}", e.getMessage());
         }
         return result;
+    }
+
+    public Credentials getCredentialsByAccountAddressAndPassword(String accountAddress, String password) {
+        Credentials credentials = null;
+        if (password != null && accountAddress != null) {
+            try {
+                String extractedAddress = this.extractSufix(accountAddress);
+                File keystoreDir = new File(KEYSTORE);
+                if (keystoreDir.isDirectory()) {
+                    File[] files = keystoreDir.listFiles((dir, name) -> name.contains(extractedAddress));
+                    if (files != null && files.length == 1) {
+                        File currentWallet = files[0];
+                        credentials = WalletUtils.loadCredentials(password, currentWallet);
+                    }
+                }
+            } catch (Exception e) {
+                log.error("Get credentials by account address error, message: {}", e.getMessage());
+            }
+        }
+        return credentials;
+    }
+
+    public boolean isValidWallet(String accountAddress) {
+        boolean result = false;
+        try {
+            String extractedAddress = this.extractSufix(accountAddress);
+            File keystoreDir = new File(KEYSTORE);
+            if (keystoreDir.isDirectory()) {
+                File[] files = keystoreDir.listFiles((dir, name) -> name.contains(extractedAddress));
+                result = files != null && files.length == 1;
+            }
+        } catch (Exception e) {
+            log.error("Validate account address error, message: {}", e.getMessage());
+        }
+        return result;
+    }
+
+    private String extractSufix(String accountAddress) {
+        if (accountAddress.startsWith("0x")) {
+            return accountAddress.substring(2);
+        }
+        return accountAddress;
     }
 }

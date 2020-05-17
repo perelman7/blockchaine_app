@@ -12,4 +12,7 @@ public interface Web3jWalletService {
 
     Credentials getCredentialByPrivateKey(String privateKey);
     BigInteger getBalanceByAccountNumber(String accountNumber);
+
+    Credentials getCredentialsByAccountAddressAndPassword(String accountAddress, String password);
+    boolean isValidWallet(String accountAddress);
 }

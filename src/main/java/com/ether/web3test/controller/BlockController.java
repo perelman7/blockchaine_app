@@ -19,7 +19,8 @@ public class BlockController {
     private Web3jBlockProvider blockProvider;
 
     @GetMapping("/all")
-    public ResponseEntity<TrxResponse> getAllTransactions(@RequestParam String privateKey, @RequestParam(required = false) TypeRequest typeRequest){
+    public ResponseEntity<TrxResponse> getAllTransactions(@RequestParam String privateKey,
+                                                          @RequestParam(required = false) TypeRequest typeRequest){
         if(privateKey != null && !privateKey.isEmpty()){
             TrxResponse allTransactions;
             if(typeRequest != null){
