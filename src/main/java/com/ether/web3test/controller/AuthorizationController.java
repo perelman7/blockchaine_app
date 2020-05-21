@@ -30,8 +30,9 @@ public class AuthorizationController {
     private Web3jWalletService web3jWalletService;
 
     @PostMapping("/log-in")
-    public ResponseEntity logIn(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<String> logIn(@RequestBody LoginRequest loginRequest) {
         if (loginRequest != null) {
+            log.info("Login request: {}", loginRequest);
             String jwt = null;
             try {
                 Credentials credentials = web3jWalletService
@@ -43,7 +44,7 @@ public class AuthorizationController {
             } catch (Exception e) {
                 log.error("Log in error, message: {}", e.getMessage());
             }
-            return new ResponseEntity(jwt, HttpStatus.OK);
+            return new ResponseEntity<>(jwt, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

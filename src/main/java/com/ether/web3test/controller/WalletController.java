@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
+import java.util.List;
 
 @RestController
 @RequestMapping("/web3/wallet")
@@ -20,8 +21,8 @@ public class WalletController {
     private Web3jWalletService web3JWalletService;
 
     @PostMapping("/create")
-    public ResponseEntity<CredentialsWallet> createWallet(String password){
-        if(password != null){
+    public ResponseEntity<CredentialsWallet> createWallet(String password) {
+        if (password != null) {
             CredentialsWallet wallet = web3JWalletService.createWallet(password);
             return new ResponseEntity<>(wallet, HttpStatus.OK);
         }
@@ -29,15 +30,21 @@ public class WalletController {
     }
 
     @GetMapping("/balance")
-    public ResponseEntity<BigInteger> getBalance(String accountNumber){
+    public ResponseEntity<BigInteger> getBalance(String accountNumber) {
         BigInteger balanceByAccountNumber = web3JWalletService.getBalanceByAccountNumber(accountNumber);
         return new ResponseEntity<>(balanceByAccountNumber, HttpStatus.OK);
     }
 
     @GetMapping("/info")
-    public ResponseEntity<CredentialsWallet> getBalance(String filename, String pwd){
+    public ResponseEntity<CredentialsWallet> getBalance(String filename, String pwd) {
         CredentialsWallet credentialsWallet = web3JWalletService.getCredentialsWallet(filename, pwd);
         return new ResponseEntity<>(credentialsWallet, HttpStatus.OK);
+    }
+
+    @GetMapping("/accounts")
+    public ResponseEntity<List<String>> getAllAccounts() {
+        List<String> allAccounts = web3JWalletService.getAllAccounts();
+        return new ResponseEntity<>(allAccounts, HttpStatus.OK);
     }
 
 }

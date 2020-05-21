@@ -11,6 +11,7 @@ import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.EthAccounts;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 
 import java.io.File;
@@ -19,6 +20,8 @@ import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -136,6 +139,17 @@ public class Web3JWalletServiceImpl implements Web3jWalletService {
             }
         } catch (Exception e) {
             log.error("Validate account address error, message: {}", e.getMessage());
+        }
+        return result;
+    }
+
+    public List<String> getAllAccounts(){
+        List<String> result = new ArrayList<>();
+        try {
+            EthAccounts ethAccounts = web3jMetadataProvider.getWeb3j().ethAccounts().send();
+            result = ethAccounts.getAccounts();
+        }catch (Exception e){
+            log.error("Getting all accounts error, message: {}", e.getMessage());
         }
         return result;
     }

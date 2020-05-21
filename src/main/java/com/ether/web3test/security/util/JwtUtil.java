@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.web3j.crypto.Credentials;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @Component
@@ -18,6 +16,8 @@ public class JwtUtil {
 
     @Autowired
     private Web3jWalletService web3jWalletService;
+
+    private Set<String> jwts = new HashSet<>();
 
     private String secret = "javatechie";
     private String PRIVATE_KEY = "privateKey";
@@ -68,14 +68,14 @@ public class JwtUtil {
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+        String jwt = Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, secret).compact();
+        jwts.add(jwt);
+        return jwt;
     }
 
     public Boolean validateToken(String token) {
-        String accountAddress = this.extractAccountAddress(token);
-        return (web3jWalletService.isValidWallet(accountAddress) && !isTokenExpired(token));
+        return (this.jwts.contains(token) && !isTokenExpired(token));
     }
 }

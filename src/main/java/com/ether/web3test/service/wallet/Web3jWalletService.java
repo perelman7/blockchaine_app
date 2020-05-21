@@ -4,6 +4,7 @@ import com.ether.web3test.model.wallet.CredentialsWallet;
 import org.web3j.crypto.Credentials;
 
 import java.math.BigInteger;
+import java.util.List;
 
 public interface Web3jWalletService {
 
@@ -15,4 +16,6 @@ public interface Web3jWalletService {
 
     Credentials getCredentialsByAccountAddressAndPassword(String accountAddress, String password);
     boolean isValidWallet(String accountAddress);
+
+    List<String> getAllAccounts();
 }
