@@ -1,17 +1,16 @@
 package com.ether.web3test.controller;
 
 import com.ether.web3test.model.wallet.CredentialsWallet;
+import com.ether.web3test.security.util.JwtUtil;
 import com.ether.web3test.service.wallet.Web3jWalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/web3/wallet")
@@ -19,6 +18,9 @@ public class WalletController {
 
     @Autowired
     private Web3jWalletService web3JWalletService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping("/create")
     public ResponseEntity<CredentialsWallet> createWallet(String password) {
@@ -42,8 +44,10 @@ public class WalletController {
     }
 
     @GetMapping("/accounts")
-    public ResponseEntity<List<String>> getAllAccounts() {
+    public ResponseEntity<List<String>> getAllAccounts(@RequestHeader("Authorization") String jwt) {
+        String currentAccount = jwtUtil.extractAccountAddress(jwt);
         List<String> allAccounts = web3JWalletService.getAllAccounts();
+        allAccounts = allAccounts.stream().filter(e -> !currentAccount.equals(e)).collect(Collectors.toList());
         return new ResponseEntity<>(allAccounts, HttpStatus.OK);
     }
 

@@ -32,7 +32,7 @@ public class SmartContractController {
     }
 
     @PostMapping("/load")
-    public ResponseEntity<ContractModel> loadSC(String hashAddress, String privateKey) throws Exception {
+    public ResponseEntity<ContractModel> loadSC(String hashAddress, String privateKey) {
         FileStorageContract fileStorageContract = web3jSmartContractService.loadSC(hashAddress, privateKey);
         ContractModel result = convector.convert(fileStorageContract);
         return new ResponseEntity<>(result, HttpStatus.OK);

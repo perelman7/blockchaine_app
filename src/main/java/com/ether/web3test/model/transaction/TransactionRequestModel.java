@@ -1,4 +1,4 @@
-package com.ether.web3test.model.block.items;
+package com.ether.web3test.model.transaction;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,12 +12,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TrxModel implements Serializable {
+public class TransactionRequestModel implements Serializable {
 
-    private String sender;
-    private String recipient;
+    private String privateKeySender;
+    private String accountRecipient;
     private BigDecimal amount;
-    private String blockNumber;
-    private String trxHash;
 }
-

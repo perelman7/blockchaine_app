@@ -45,6 +45,9 @@ public class JwtUtil {
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        if(token.startsWith("Bearer ")){
+            token = token.replace("Bearer ", "");
+        }
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }

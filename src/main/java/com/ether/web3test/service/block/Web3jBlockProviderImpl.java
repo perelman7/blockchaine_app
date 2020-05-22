@@ -20,7 +20,9 @@ import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.utils.Convert;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,8 +90,9 @@ public class Web3jBlockProviderImpl implements Web3jBlockProvider {
                             } else {
                                 log.info("Transaction send ether");
 
+                                BigDecimal ethBalance = Convert.fromWei(transaction.getValue().toString(), Convert.Unit.ETHER);
                                 TrxModel trxModel = TrxModel.builder()
-                                        .amount(transaction.getValue())
+                                        .amount(ethBalance)
                                         .blockNumber(transaction.getBlockNumberRaw())
                                         .sender(transaction.getFrom())
                                         .recipient(transaction.getTo())
