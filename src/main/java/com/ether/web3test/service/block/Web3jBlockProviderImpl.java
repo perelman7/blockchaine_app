@@ -93,7 +93,7 @@ public class Web3jBlockProviderImpl implements Web3jBlockProvider {
                                 BigDecimal ethBalance = Convert.fromWei(transaction.getValue().toString(), Convert.Unit.ETHER);
                                 TrxModel trxModel = TrxModel.builder()
                                         .amount(ethBalance)
-                                        .blockNumber(transaction.getBlockNumberRaw())
+                                        .blockNumber(transaction.getBlockNumber().toString(10))
                                         .sender(transaction.getFrom())
                                         .recipient(transaction.getTo())
                                         .trxHash(transaction.getHash())

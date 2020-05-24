@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 
 @Data
 @AllArgsConstructor
@@ -20,6 +19,6 @@ public class ContractModel implements Serializable {
     private String description;
     private String recipient;
     private String sender;
-    private BigInteger data;
+    private String data;
 
 }

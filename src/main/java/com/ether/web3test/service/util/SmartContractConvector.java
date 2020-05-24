@@ -2,6 +2,7 @@ package com.ether.web3test.service.util;
 
 import com.ether.web3test.model.block.items.ContractModel;
 import com.ether.web3test.model.contracts.FileStorageContract;
+import com.ether.web3test.service.util.timeconvertor.TimeConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,7 @@ public class SmartContractConvector {
                         .filepath(filepath)
                         .extension(extension)
                         .recipient(recipient)
-                        .data(date)
+                        .data(TimeConverter.convert(date))
                         .sender(sender)
                         .description(description)
                         .build();
