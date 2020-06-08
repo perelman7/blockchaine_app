@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class TimeConverter {
 
-    private static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm:ss");
+    private static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
     public static String convert(BigInteger milliseconds) {
         String result = null;

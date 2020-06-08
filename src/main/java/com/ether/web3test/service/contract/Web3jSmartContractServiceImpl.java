@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.tx.RawTransactionManager;
+import org.web3j.tx.gas.DefaultGasProvider;
 import org.web3j.tx.gas.StaticGasProvider;
 
 import java.math.BigInteger;
@@ -33,9 +34,9 @@ public class Web3jSmartContractServiceImpl implements Web3jSmartContractService 
         try {
             Web3j web3j = web3jMetadataProvider.getWeb3j();
             Credentials credentials = Credentials.create(request.getPrivateKey());
-//            DefaultGasProvider defaultGasProvider = new DefaultGasProvider();
-            GasInfo gasInfo = web3jMetadataProvider.getGasInfo(null);
-            StaticGasProvider defaultGasProvider = new StaticGasProvider(gasInfo.getGasPrice(), gasInfo.getGasLimit());
+            DefaultGasProvider defaultGasProvider = new DefaultGasProvider();
+//            GasInfo gasInfo = web3jMetadataProvider.getGasInfo(null);
+//            StaticGasProvider defaultGasProvider = new StaticGasProvider(gasInfo.getGasPrice().divide(BigInteger.TEN), gasInfo.getGasLimit());
             log.info("Gas info: limit({}) and price({})", defaultGasProvider.getGasLimit(), defaultGasProvider.getGasPrice());
 
             FileStorageContract contract = FileStorageContract.deploy(web3j, new RawTransactionManager(web3j, credentials), defaultGasProvider,

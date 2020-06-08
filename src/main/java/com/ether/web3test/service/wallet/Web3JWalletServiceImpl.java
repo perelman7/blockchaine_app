@@ -10,10 +10,12 @@ import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.admin.Admin;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthAccounts;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -33,13 +35,18 @@ public class Web3JWalletServiceImpl implements Web3jWalletService {
     @Autowired
     private Web3jMetadataProvider web3jMetadataProvider;
 
+    @PostConstruct
+    private void init(){
+        Admin admin = web3jMetadataProvider.getAdmin();
+        admin.personalUnlockAccount("0x9b4d1f8bcefd8d4170a797115aeda24fea481167", "main1");
+    }
+
     /**
      * Method generates new wallet and return private key
      *
      * @param password custom`s password
      * @return privet key of wallet
      */
-    //todo create init value of balance from main1
     public CredentialsWallet createWallet(String password) {
         CredentialsWallet result = null;
         try {
